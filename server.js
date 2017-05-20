@@ -11,7 +11,6 @@ let app = express()
 
 require('./app/config/express.js')(app, express)
 
-// let weatherAPI = require('./app/apis/weather.api.js')
 // let messengerProfileAPI = require('./app/apis/messenger_profile.api.js')
 // let userMgt = require('./app/controllers/userManagement.controller.js')
 // let firebase = require('./app/config/firebase.init.js')
@@ -51,7 +50,7 @@ botmaster.on('update', (bot, update) => {
 
   if(update.message) {
 
-    bot.sendTextMessage('hello', update.sender.id)
+    bot.sendTextMessageTo('hello', update.sender.id)
     if(update.message.quick_reply) {
 
 
