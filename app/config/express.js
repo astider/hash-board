@@ -1,12 +1,6 @@
 //let express = require('express')
 let ejs = require('ejs');
 //let express =
-let quizControl = require('../controllers/quizControl.controller.js')
-let quizResult = require('../controllers/quizResult.controller.js')
-let quizInput = require('../controllers/quizInput.controller.js')
-let quizAPIsV2 = require('../controllers/quizAPIsV2.controller.js')
-let quizAPIs = require('../controllers/quizAPIs.controller.js')
-let index = require('../controllers/index.cotnroller.js')
 
 let bodyParser = require("body-parser");
 let urlencodedParser = bodyParser.urlencoded({
