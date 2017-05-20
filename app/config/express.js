@@ -40,7 +40,7 @@ module.exports = function(app, express) {
 
     res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, POST, DELETE');
     res.header("Access-Control-Allow-Headers", "Origin, Content-Type");
-  
+
     console.log(`req.method = ${req.method}`);
     if ('OPTIONS' == req.method) {
      return res.status(200).end();
@@ -57,6 +57,6 @@ module.exports = function(app, express) {
 
   app.get("/", function(req, res) { res.send('yay') })
 
-  app.get("/*", (req, res) => { res.render("404") } )
+  //app.get("/*", (req, res) => { res.render("404") } )
 
 }
