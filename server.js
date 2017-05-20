@@ -51,7 +51,7 @@ botmaster.on('update', (bot, update) => {
 
   if(update.message) {
 
-
+    bot.sendTextMessage('hello', update.sender.id)
     if(update.message.quick_reply) {
 
 
