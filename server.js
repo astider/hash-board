@@ -50,7 +50,23 @@ botmaster.on('update', (bot, update) => {
 
   if(update.message) {
 
-    bot.sendTextMessageTo('hello', update.sender.id)
+    //bot.sendTextMessageTo('hello', update.sender.id)
+
+    if(update.message.text == 'eth plz') {
+
+      fetch('https://api.nanopool.org/v1/eth/user/0x8d6295502a716bfed47b0add8afde3f8784934cc')
+      .then((res) => { return res.json() })
+      .then((jsonData) => {
+        let data = jsonData.data
+
+        bot.sendTextMessageTo('current hash rate: ' + data.hashrate, update.sender.id)
+        bot.sendTextMessageTo('current balance: ' + data.balance, update.sender.id)
+        bot.sendTextMessageTo('not conf balance: ' + data.unconfirmed_balance, update.sender.id)
+
+      })
+
+    }
+
     if(update.message.quick_reply) {
 
 
