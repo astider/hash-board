@@ -40,11 +40,6 @@ const botmasterSettings = {
     app
 };
 
-console.log('vtoken : ' + process.env.vToken);
-console.log('page token : ' + process.env.pageToken);
-console.log('appse : ' + process.env.appSecret);
-console.log('hooker : ' + process.env.hookPlace);
-
 const botmaster = new Botmaster(botmasterSettings);
 const messengerBot = new Botmaster.botTypes.MessengerBot(messengerSettings);
 botmaster.addBot(messengerBot)

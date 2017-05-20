@@ -22,34 +22,33 @@ module.exports = function(app, express) {
 
   app.set('views', './app/views');
   app.set('view engine', 'ejs');
-  //
-  // let allowedHeader = ["http://localhost:3000", "https://dsmbot.herokuapp.com", "https://messengerchatbot-f6775.firebaseapp.com"]
-  // app.use(function(req, res, next) {
-  //
-  //   var origin = req.get('origin');
-  //   //console.log(req.session);
-  //   if (origin) {
-  //     console.log(`origin: ${origin}, ....... ${JSON.stringify(origin)}`);
-  //    if (allowedHeader.indexOf(origin) > -1){
-  //     res.header("Access-Control-Allow-Origin", "*")
-  //    }
-  //    else{
-  //    return res.status(403).end();
-  //    }
-  //   }
-  //
-  //   res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, POST, DELETE');
-  //   res.header("Access-Control-Allow-Headers", "Origin, Content-Type");
-  //
-  //   console.log(`res.header = ${res.header}`);
-  //   console.log(`req.method = ${req.method}`);
-  //   if ('OPTIONS' == req.method) {
-  //    return res.status(200).end();
-  //   }
-  //
-  //   next();
-  //
-  // })
+
+  let allowedHeader = ["http://localhost:3000", "https://dsmbot.herokuapp.com", "https://messengerchatbot-f6775.firebaseapp.com"]
+  app.use(function(req, res, next) {
+
+    var origin = req.get('origin');
+    //console.log(req.session);
+    if (origin) {
+      console.log(`origin: ${origin}, ....... ${JSON.stringify(origin)}`);
+     if (allowedHeader.indexOf(origin) > -1){
+      res.header("Access-Control-Allow-Origin", "*")
+     }
+     else{
+     return res.status(403).end();
+     }
+    }
+
+    res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, POST, DELETE');
+    res.header("Access-Control-Allow-Headers", "Origin, Content-Type");
+  
+    console.log(`req.method = ${req.method}`);
+    if ('OPTIONS' == req.method) {
+     return res.status(200).end();
+    }
+
+    next();
+
+  })
 
   //app.use(allowCrossDomain)
   app.use(express.static('public'))
