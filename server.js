@@ -52,24 +52,31 @@ botmaster.on('update', (bot, update) => {
 
     //bot.sendTextMessageTo('hello', update.sender.id)
 
-    if(update.message.text == 'eth stat') {
+    if(update.message.text == 'stat sia' | update.message.text == 'stat eth') {
 
-      fetch('https://api.nanopool.org/v1/eth/user/0x8d6295502a716bfed47b0add8afde3f8784934cc')
+      let currency = (update.message.text.split(" "))[1]
+      let address = "0x8d6295502a716bfed47b0add8afde3f8784934cc" //default for eth
+
+      if(currency == 'sia')
+        address = "9eb4092a101eef91e6de12b0ac86e1ae6fba635df2354234df4d14dc9596c4b33ba706bc0fce"
+
+      fetch('https://api.nanopool.org/v1/' + currency + '/user/' + address)
       .then((res) => { return res.json() })
       .then((jsonData) => {
 
         let data = jsonData.data
 
         let avgHashrate = Object.keys(data.avgHashrate).reduce((sum, key)=> {
-          return sum+data.avgHashrate[key]
+          return sum + parseFloat(data.avgHashrate[key])
         }, 0 ) + data.hashrate
-        avgHashrate /= 6
+
+        avgHashrate = parseFloat(avgHashrate)/6.0
 
         bot.sendTextMessageTo('current hash rate: ' + data.hashrate, update.sender.id)
         bot.sendTextMessageTo('avg hash rate: ' + avgHashrate, update.sender.id)
         bot.sendTextMessageTo('current balance: ' + data.balance, update.sender.id)
 
-        return fetch('https://api.nanopool.org/v1/eth/approximated_earnings/' + avgHashrate)
+        return fetch('https://api.nanopool.org/v1/' + currency + '/approximated_earnings/' + avgHashrate)
       })
       .then((res) => { return res.json() })
       .then((jsonData) => {
