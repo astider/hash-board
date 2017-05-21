@@ -92,15 +92,10 @@ botmaster.on('update', (bot, update) => {
           'current balance: ' + data.balance
         ]
 
-        if(current == 'sia')
+        if(currency == 'sia')
           textOrder.push('unconfirmed blaance: ' + data.unconfirmed_balance)
 
         bot.sendTextCascadeTo(textOrder, update.sender.id)
-/*
-        bot.sendTextMessageTo('current hash rate: ' + data.hashrate, update.sender.id)
-        bot.sendTextMessageTo('avg hash rate: ' + avgHashrate, update.sender.id)
-        bot.sendTextMessageTo('current balance: ' + data.balance, update.sender.id)
-*/
 
         return fetch('https://api.nanopool.org/v1/' + currency + '/approximated_earnings/' + avgHashrate)
 
@@ -123,22 +118,7 @@ botmaster.on('update', (bot, update) => {
         setTimeout(()=>{
           bot.sendTextCascadeTo(textOrder, update.sender.id)
         }, 1000)
-/*
-        bot.sendTextMessageTo('1-day rate: ' + rounder(day.coins)
-          + ' ETH, ' + rounder(day.bitcoins)
-          + ' BTC, $' + rounder(day.dollars)
-          , update.sender.id)
 
-        bot.sendTextMessageTo('1-week rate: ' + rounder(week.coins)
-          + ' ETH, ' + rounder(week.bitcoins)
-          + ' BTC, $' + rounder(week.dollars)
-          , update.sender.id)
-
-        bot.sendTextMessageTo('1-month rate: ' + rounder(month.coins)
-          + ' ETH, ' + rounder(month.bitcoins)
-          + ' BTC, $' + rounder(month.dollars)
-          , update.sender.id)
-*/
       })
       .catch((error)=>{
         console.log('eth stat request error: ' + error);
