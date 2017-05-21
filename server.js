@@ -113,8 +113,8 @@ botmaster.on('update', (bot, update) => {
         let month = rate.month
 
         let textOrder = [
-          '1-day rate: ' + rounder(day.coins) + ' ' + currency.toUpperCase() + ', ' + rounder(day.bitcoins) + ' BTC, $' + parseInt(day.dollars),
-          '1-week rate: ' + rounder(week.coins) + ' ' + currency.toUpperCase() + ', ' + rounder(week.bitcoins) + ' BTC, $' + parseInt(week.dollars)//,
+          '1-day rate: ' + rounder(day.coins, 2) + ' ' + currency.toUpperCase() + ', ' + rounder(day.bitcoins, 4) + ' BTC, $' + parseInt(day.dollars),
+          '1-week rate: ' + rounder(week.coins, 2) + ' ' + currency.toUpperCase() + ', ' + rounder(week.bitcoins, 4) + ' BTC, $' + parseInt(week.dollars)//,
           //'1-month rate: ' + rounder(month.coins) + ' ' + currency.toUpperCase() + ', ' + rounder(month.bitcoins) + ' BTC, $' + rounder(month.dollars)
         ]
 
@@ -142,8 +142,8 @@ botmaster.on('update', (bot, update) => {
 
 });
 
-function rounder(floatNumber) {
-  return parseInt(floatNumber*100)/100
+function rounder(floatNumber, point) {
+  return parseInt( floatNumber * Math.pow(10, point) ) / Math.pow(10, point)
 }
 
 
