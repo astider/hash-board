@@ -72,10 +72,18 @@ botmaster.on('update', (bot, update) => {
 
         avgHashrate = parseFloat(avgHashrate)/6.0
 
+        let textOrder = [
+          'current hash rate: ' + data.hashrate,
+          'avg hash rate: ' + avgHashrate,
+          'current balance: ' + data.balance
+        ]
+
+        bot.sendTextCascadeTo(textOrder, update.sender.id)
+/*
         bot.sendTextMessageTo('current hash rate: ' + data.hashrate, update.sender.id)
         bot.sendTextMessageTo('avg hash rate: ' + avgHashrate, update.sender.id)
         bot.sendTextMessageTo('current balance: ' + data.balance, update.sender.id)
-
+*/
         return fetch('https://api.nanopool.org/v1/' + currency + '/approximated_earnings/' + avgHashrate)
       })
       .then((res) => { return res.json() })
@@ -87,21 +95,29 @@ botmaster.on('update', (bot, update) => {
         let week = rate.week
         let month = rate.month
 
+        let textOrder = [
+          '1-day rate: ' + rounder(day.coins) + ' ETH, ' + rounder(day.bitcoins) + ' BTC, $' + rounder(day.dollars),
+          '1-week rate: ' + rounder(week.coins) + ' ETH, ' + rounder(week.bitcoins) + ' BTC, $' + rounder(week.dollars),
+          '1-month rate: ' + rounder(month.coins) + ' ETH, ' + rounder(month.bitcoins) + ' BTC, $' + rounder(month.dollars)
+        ]
+
+        bot.sendTextCascadeTo(textOrder, update.sender.id)
+/*
         bot.sendTextMessageTo('1-day rate: ' + rounder(day.coins)
-          + ' ETH = ' + rounder(day.bitcoins)
-          + ' BTC = ' + rounder(day.dollars)
+          + ' ETH, ' + rounder(day.bitcoins)
+          + ' BTC, $' + rounder(day.dollars)
           , update.sender.id)
 
         bot.sendTextMessageTo('1-week rate: ' + rounder(week.coins)
-          + ' ETH = ' + rounder(week.bitcoins)
-          + ' BTC = ' + rounder(week.dollars)
+          + ' ETH, ' + rounder(week.bitcoins)
+          + ' BTC, $' + rounder(week.dollars)
           , update.sender.id)
 
         bot.sendTextMessageTo('1-month rate: ' + rounder(month.coins)
-          + ' ETH = ' + rounder(month.bitcoins)
-          + ' BTC = ' + rounder(month.dollars)
+          + ' ETH, ' + rounder(month.bitcoins)
+          + ' BTC, $' + rounder(month.dollars)
           , update.sender.id)
-
+*/
       })
       .catch((error)=>{
         console.log('eth stat request error: ' + error);
