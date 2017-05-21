@@ -84,7 +84,10 @@ botmaster.on('update', (bot, update) => {
         bot.sendTextMessageTo('avg hash rate: ' + avgHashrate, update.sender.id)
         bot.sendTextMessageTo('current balance: ' + data.balance, update.sender.id)
 */
-        return fetch('https://api.nanopool.org/v1/' + currency + '/approximated_earnings/' + avgHashrate)
+        setTimeOut(()=>{
+          return fetch('https://api.nanopool.org/v1/' + currency + '/approximated_earnings/' + avgHashrate)
+        }, 1000)
+
       })
       .then((res) => { return res.json() })
       .then((jsonData) => {
@@ -96,9 +99,9 @@ botmaster.on('update', (bot, update) => {
         let month = rate.month
 
         let textOrder = [
-          '1-day rate: ' + rounder(day.coins) + ' ' + currency.toUpperCase() + ', ' + rounder(day.bitcoins) + ' BTC, $' + rounder(day.dollars),
-          '1-week rate: ' + rounder(week.coins) + ' ' + currency.toUpperCase() + ', ' + rounder(week.bitcoins) + ' BTC, $' + rounder(week.dollars),
-          '1-month rate: ' + rounder(month.coins) + ' ' + currency.toUpperCase() + ', ' + rounder(month.bitcoins) + ' BTC, $' + rounder(month.dollars)
+          '1-day rate: ' + rounder(day.coins) + ' ' + currency.toUpperCase() + ', ' + rounder(day.bitcoins) + ' BTC, $' + parseInt(day.dollars),
+          '1-week rate: ' + rounder(week.coins) + ' ' + currency.toUpperCase() + ', ' + rounder(week.bitcoins) + ' BTC, $' + parseInt(week.dollars)//,
+          //'1-month rate: ' + rounder(month.coins) + ' ' + currency.toUpperCase() + ', ' + rounder(month.bitcoins) + ' BTC, $' + rounder(month.dollars)
         ]
 
         bot.sendTextCascadeTo(textOrder, update.sender.id)
@@ -139,7 +142,7 @@ botmaster.on('update', (bot, update) => {
 });
 
 function rounder(floatNumber) {
-  return parseInt(floatNumber*10000)/10000
+  return parseInt(floatNumber*100)/100
 }
 
 
