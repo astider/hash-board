@@ -76,12 +76,9 @@ botmaster.on('update', (bot, update) => {
         let data = jsonData.data
         let avgHashrate = 0
 
-        if(update.message.text.indexOf('classic') > -1) {
-          try {
+        if(update.message.text.indexOf('classic') > -1)
             avgHashrate = parseFloat(data.avgHashrate.h6)
-          }
-          catch(error) { console.log('error for classic') }
-        }
+
         else {
 
           avgHashrate = Object.keys(data.avgHashrate).reduce((sum, key)=> {
@@ -99,7 +96,7 @@ botmaster.on('update', (bot, update) => {
         ]
 
         if(currency == 'sia')
-          textOrder.push('unconfirmed blaance: ' + data.unconfirmed_balance)
+          textOrder.push('unconfirmed balance: ' + data.unconfirmed_balance)
 
         bot.sendTextCascadeTo(textOrder, update.sender.id)
 
