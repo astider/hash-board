@@ -84,7 +84,7 @@ botmaster.on('update', (bot, update) => {
         bot.sendTextMessageTo('avg hash rate: ' + avgHashrate, update.sender.id)
         bot.sendTextMessageTo('current balance: ' + data.balance, update.sender.id)
 */
-        setTimeOut(()=>{
+        setTimeout(()=>{
           return fetch('https://api.nanopool.org/v1/' + currency + '/approximated_earnings/' + avgHashrate)
         }, 1000)
 
