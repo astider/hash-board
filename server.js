@@ -65,18 +65,29 @@ botmaster.on('update', (bot, update) => {
       .then((jsonData) => {
 
         let data = jsonData.data
+        let avgHashrate = 0
 
-        let avgHashrate = Object.keys(data.avgHashrate).reduce((sum, key)=> {
-          return sum + parseFloat(data.avgHashrate[key])
-        }, 0 ) + data.hashrate
+        if(update.message.text.indexOf('classic'))
+          avgHashrate = parseFloat(data.avgHashrate.h6)
 
-        avgHashrate = parseFloat(avgHashrate)/6.0
+        else {
+
+          avgHashrate = Object.keys(data.avgHashrate).reduce((sum, key)=> {
+            return sum + parseFloat(data.avgHashrate[key])
+          }, 0 ) + data.hashrate
+
+          avgHashrate = parseFloat(avgHashrate)/6.0
+
+        }
 
         let textOrder = [
           'current hash rate: ' + data.hashrate,
           'avg hash rate: ' + avgHashrate,
           'current balance: ' + data.balance
         ]
+
+        if(current == 'sia')
+          textOrder.push('unconfirmed blaance: ' + data.unconfirmed_balance)
 
         bot.sendTextCascadeTo(textOrder, update.sender.id)
 /*
