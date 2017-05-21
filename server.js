@@ -84,9 +84,8 @@ botmaster.on('update', (bot, update) => {
         bot.sendTextMessageTo('avg hash rate: ' + avgHashrate, update.sender.id)
         bot.sendTextMessageTo('current balance: ' + data.balance, update.sender.id)
 */
-        setTimeout(()=>{
-          return fetch('https://api.nanopool.org/v1/' + currency + '/approximated_earnings/' + avgHashrate)
-        }, 1000)
+
+        return fetch('https://api.nanopool.org/v1/' + currency + '/approximated_earnings/' + avgHashrate)
 
       })
       .then((res) => { return res.json() })
@@ -104,7 +103,9 @@ botmaster.on('update', (bot, update) => {
           //'1-month rate: ' + rounder(month.coins) + ' ' + currency.toUpperCase() + ', ' + rounder(month.bitcoins) + ' BTC, $' + rounder(month.dollars)
         ]
 
-        bot.sendTextCascadeTo(textOrder, update.sender.id)
+        setTimeout(()=>{
+          bot.sendTextCascadeTo(textOrder, update.sender.id)
+        }, 1000)
 /*
         bot.sendTextMessageTo('1-day rate: ' + rounder(day.coins)
           + ' ETH, ' + rounder(day.bitcoins)
