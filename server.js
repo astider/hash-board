@@ -53,7 +53,19 @@ botmaster.on('update', (bot, update) => {
     //bot.sendTextMessageTo('hello', update.sender.id)
     console.log('bot got message');
 
-    if(update.message.text.indexOf('stat sia') > -1 || update.message.text.indexOf('stat eth') > -1) {
+    if(update.message.text.indexOf('view eth') > -1 ) {
+
+      let url = 'https://eth.nanopool.org/account/0x8d6295502a716bfed47b0add8afde3f8784934cc'
+      bot.sendTextMessageTo('Here: ' + url, update.sender.id)
+
+    }
+    else if(update.message.text.indexOf('view sia') > -1){
+
+      let url = 'https://sia.nanopool.org/account/9eb4092a101eef91e6de12b0ac86e1ae6fba635df2354234df4d14dc9596c4b33ba706bc0fce'
+      bot.sendTextMessageTo('Here: ' + url, update.sender.id)
+
+    }
+    else if(update.message.text.indexOf('stat sia') > -1 || update.message.text.indexOf('stat eth') > -1) {
 
       let currency = ''
       let address = ''
