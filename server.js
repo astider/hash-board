@@ -53,9 +53,7 @@ botmaster.on('update', (bot, update) => {
     //bot.sendTextMessageTo('hello', update.sender.id)
     console.log('bot got message');
 
-    if(update.message.text.indexOf('stat sia') > -1 || update.message.indexOf('stat eth') > -1) {
-
-      console.log('bot got stat request : ' + update.message.text);
+    if(update.message.text.indexOf('stat sia') > -1 || update.message.text.indexOf('stat eth') > -1) {
 
       let currency = ''
       let address = ''
