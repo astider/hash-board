@@ -96,9 +96,9 @@ botmaster.on('update', (bot, update) => {
         let month = rate.month
 
         let textOrder = [
-          '1-day rate: ' + rounder(day.coins) + currency.toUpperCase() + ', ' + rounder(day.bitcoins) + ' BTC, $' + rounder(day.dollars),
-          '1-week rate: ' + rounder(week.coins) + currency.toUpperCase() + ', ' + rounder(week.bitcoins) + ' BTC, $' + rounder(week.dollars),
-          '1-month rate: ' + rounder(month.coins) + currency.toUpperCase() + ', ' + rounder(month.bitcoins) + ' BTC, $' + rounder(month.dollars)
+          '1-day rate: ' + rounder(day.coins) + ' ' + currency.toUpperCase() + ', ' + rounder(day.bitcoins) + ' BTC, $' + rounder(day.dollars),
+          '1-week rate: ' + rounder(week.coins) + ' ' + currency.toUpperCase() + ', ' + rounder(week.bitcoins) + ' BTC, $' + rounder(week.dollars),
+          '1-month rate: ' + rounder(month.coins) + ' ' + currency.toUpperCase() + ', ' + rounder(month.bitcoins) + ' BTC, $' + rounder(month.dollars)
         ]
 
         bot.sendTextCascadeTo(textOrder, update.sender.id)
