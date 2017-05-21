@@ -51,8 +51,11 @@ botmaster.on('update', (bot, update) => {
   if(update.message) {
 
     //bot.sendTextMessageTo('hello', update.sender.id)
+    console.log('bot got message');
 
     if(update.message.text.indexOf('stat sia') > -1 || update.message.indexOf('stat eth') > -1) {
+
+      console.log('bot got stat request : ' + update.message.text);
 
       let currency = ''
       let address = ''
@@ -60,10 +63,12 @@ botmaster.on('update', (bot, update) => {
       if(update.message.text.indexOf('sia') > -1) {
         currency = 'sia'
         address = "9eb4092a101eef91e6de12b0ac86e1ae6fba635df2354234df4d14dc9596c4b33ba706bc0fce"
+        console.log('currency and address setup for ' + currency);
       }
       else if(update.message.text.indexOf('eth') > -1) {
         currency = 'eth'
         address = "0x8d6295502a716bfed47b0add8afde3f8784934cc"
+        console.log('currency and address setup for ' + currency);
       }
 
       fetch('https://api.nanopool.org/v1/' + currency + '/user/' + address)
@@ -73,9 +78,12 @@ botmaster.on('update', (bot, update) => {
         let data = jsonData.data
         let avgHashrate = 0
 
-        if(update.message.text.indexOf('classic') > -1)
-          avgHashrate = parseFloat(data.avgHashrate.h6)
-
+        if(update.message.text.indexOf('classic') > -1) {
+          try {
+            avgHashrate = parseFloat(data.avgHashrate.h6)
+          }
+          catch(error) { console.log('error for classic') }
+        }
         else {
 
           avgHashrate = Object.keys(data.avgHashrate).reduce((sum, key)=> {
