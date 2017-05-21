@@ -52,16 +52,16 @@ botmaster.on('update', (bot, update) => {
 
     //bot.sendTextMessageTo('hello', update.sender.id)
 
-    if(update.message.text.indexOf('stat sia') > -1 | update.message.indexOf('stat eth') > -1) {
+    if(update.message.text.indexOf('stat sia') > -1 || update.message.indexOf('stat eth') > -1) {
 
       let currency = ''
       let address = ''
 
-      if(update.message.text.indexOf('sia')) {
+      if(update.message.text.indexOf('sia') > -1) {
         currency = 'sia'
         address = "9eb4092a101eef91e6de12b0ac86e1ae6fba635df2354234df4d14dc9596c4b33ba706bc0fce"
       }
-      else if(update.message.text.indexOf('eth')) {
+      else if(update.message.text.indexOf('eth') > -1) {
         currency = 'eth'
         address = "0x8d6295502a716bfed47b0add8afde3f8784934cc"
       }
