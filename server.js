@@ -73,7 +73,7 @@ botmaster.on('update', (bot, update) => {
         let data = jsonData.data
         let avgHashrate = 0
 
-        if(update.message.text.indexOf('classic'))
+        if(update.message.text.indexOf('classic') > -1)
           avgHashrate = parseFloat(data.avgHashrate.h6)
 
         else {
