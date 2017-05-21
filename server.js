@@ -52,13 +52,19 @@ botmaster.on('update', (bot, update) => {
 
     //bot.sendTextMessageTo('hello', update.sender.id)
 
-    if(update.message.text == 'stat sia' | update.message.text == 'stat eth') {
+    if(update.message.text.indexOf('stat sia') > -1 | update.message.indexOf('stat eth') > -1) {
 
-      let currency = (update.message.text.split(" "))[1]
-      let address = "0x8d6295502a716bfed47b0add8afde3f8784934cc" //default for eth
+      let currency = ''
+      let address = ''
 
-      if(currency == 'sia')
+      if(update.message.text.indexOf('sia')) {
+        currency = 'sia'
         address = "9eb4092a101eef91e6de12b0ac86e1ae6fba635df2354234df4d14dc9596c4b33ba706bc0fce"
+      }
+      else if(update.message.text.indexOf('eth')) {
+        currency = 'eth'
+        address = "0x8d6295502a716bfed47b0add8afde3f8784934cc"
+      }
 
       fetch('https://api.nanopool.org/v1/' + currency + '/user/' + address)
       .then((res) => { return res.json() })
