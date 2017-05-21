@@ -52,17 +52,52 @@ botmaster.on('update', (bot, update) => {
 
     //bot.sendTextMessageTo('hello', update.sender.id)
 
-    if(update.message.text == 'eth plz') {
+    if(update.message.text == 'eth stat') {
 
       fetch('https://api.nanopool.org/v1/eth/user/0x8d6295502a716bfed47b0add8afde3f8784934cc')
       .then((res) => { return res.json() })
       .then((jsonData) => {
+
         let data = jsonData.data
 
-        bot.sendTextMessageTo('current hash rate: ' + data.hashrate, update.sender.id)
-        bot.sendTextMessageTo('current balance: ' + data.balance, update.sender.id)
-        bot.sendTextMessageTo('not conf balance: ' + data.unconfirmed_balance, update.sender.id)
+        let avgHashrate = Object.keys(data.avgHashrate).reduce((sum, key)=> {
+          return sum+data.avgHashrate[key]
+        }, 0 ) + data.hashrate
+        avgHashrate /= 6
 
+        bot.sendTextMessageTo('current hash rate: ' + data.hashrate, update.sender.id)
+        bot.sendTextMessageTo('avg hash rate: ' + avgHashrate, update.sender.id)
+        bot.sendTextMessageTo('current balance: ' + data.balance, update.sender.id)
+
+        return fetch('https://api.nanopool.org/v1/eth/approximated_earnings/' + avgHashrate)
+      })
+      .then((res) => { return res.json() })
+      .then((jsonData) => {
+
+        let rate = jsonData.data
+
+        let day = rate.day
+        let week = rate.week
+        let month = rate.month
+
+        bot.sendTextMessageTo('1-day rate: ' + rounder(day.coins)
+          + ' ETH = ' + rounder(day.bitcoins)
+          + ' BTC = ' + rounder(day.dollars)
+          , update.sender.id)
+
+        bot.sendTextMessageTo('1-week rate: ' + rounder(week.coins)
+          + ' ETH = ' + rounder(week.bitcoins)
+          + ' BTC = ' + rounder(week.dollars)
+          , update.sender.id)
+
+        bot.sendTextMessageTo('1-month rate: ' + rounder(month.coins)
+          + ' ETH = ' + rounder(month.bitcoins)
+          + ' BTC = ' + rounder(month.dollars)
+          , update.sender.id)
+
+      })
+      .catch((error)=>{
+        console.log('eth stat request error: ' + error);
       })
 
     }
@@ -79,6 +114,10 @@ botmaster.on('update', (bot, update) => {
   }
 
 });
+
+function rounder(floatNumber) {
+  return parseInt(floatNumber*10000)/10000
+}
 
 
 let nodeSchedule = require('node-schedule');
