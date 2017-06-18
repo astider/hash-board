@@ -16,6 +16,13 @@ require('./app/config/express.js')(app, express)
 // let firebase = require('./app/config/firebase.init.js')
 // let database = firebase.database()
 //let firebase = require('firebase')
+let firebaseConfig = {
+  apiKey: process.env.firebaseAPIKey,
+  databaseURL: "https://hashbot-c4d51.firebaseio.com/"
+}
+
+firebase.initializeApp(firebaseConfig)
+let db = firebase.database()
 
 
 app.listen(port, () => {
@@ -46,12 +53,25 @@ botmaster.addBot(messengerBot)
 
 // -------------------------------------------------------------------------
 
+
+
+
 botmaster.on('update', (bot, update) => {
+
+  console.log('info : ' + JSON.stringify(update))
 
   if(update.message) {
 
     //bot.sendTextMessageTo('hello', update.sender.id)
     console.log('bot got message');
+
+    db.ref('testValue').once('value')
+    .then(snapshot => {
+      bot.sendTextMessageTo(snapshot.val(), update.sender.id)
+    })
+    .catch(error => {
+      console.log('error with DB: ' + error)
+    })
 
     if(update.message.text.indexOf('view eth') > -1 ) {
 
