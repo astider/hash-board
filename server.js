@@ -221,14 +221,14 @@ let rerunner = nodeSchedule.scheduleJob('*/20 * * * *', function(){
     ]
 
     let collection = {}
-    let totalBalance = 0
+    let totalBalance = 0.0
 
     result.forEach(each => {
       collection[algoArray[each.algo]] = {
         'balance': each.balance,
         'speed': each.accepted_speed
       }
-      totalBalance += each.balance
+      totalBalance += parseFloat(each.balance)
     })
 
     collection['balance'] = totalBalance
