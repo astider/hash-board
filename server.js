@@ -1,9 +1,10 @@
-require('dotenv').config();
+require('dotenv').config()
 const Botmaster = require('botmaster')
-const express = require('express');
-const https = require('https');
+const express = require('express')
+const https = require('https')
 const fetch = require('node-fetch')
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3002
+const firebase = require('firebase')
 //const app = express();
 
 let app = express()
