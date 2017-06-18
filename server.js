@@ -180,7 +180,63 @@ function rounder(floatNumber, point) {
 }
 
 
-//let nodeSchedule = require('node-schedule');
-//let rerunner = nodeSchedule.scheduleJob('*/10 * * * *', function(){
-//  console.log('running');
-//});
+
+let nodeSchedule = require('node-schedule');
+let rerunner = nodeSchedule.scheduleJob('*/20 * * * *', function(){
+
+  fetch('https://api.nicehash.com/api?method=stats.provider&addr=17vY5jqyieHEr8SotznGekCPEixWsM9Ryp')
+  .then(res => { return res.json() })
+  .then(jsonData => {
+
+    let result = jsonData.result.stats
+    let algoArray = [
+      'Scrypt',
+      'SHA256',
+      'ScryptNf',
+      'X11',
+      'X13',
+      'Keccak',
+      'X15',
+      'Nist5',
+      'NeoScrypt',
+      'Lyra2RE',
+      'WhirlpoolX',
+      'Qubit',
+      'Quark',
+      'Axiom',
+      'Lyra2REv2',
+      'ScryptJaneNf16',
+      'Blake256r8',
+      'Blake256r14',
+      'Blake256r8vnl',
+      'Hodl',
+      'DaggerHashimoto',
+      'Decred',
+      'CryptoNight',
+      'Lbry',
+      'Equihash',
+      'Pascal',
+      'X11Gost',
+      'Sia'
+    ]
+
+    let collection = {}
+
+    result.forEach(each => {
+      collection[algoArray[each.algo]] = {
+        'balance': each.balance,
+        'speed': each.accepted_speed
+      }
+    })
+
+
+    db.ref('stats/' + (new Date).getTime() ).set(collection)
+
+  })
+  .catch(error => {
+
+    console.log('ERROR Collecting Hash Rate');
+
+  })
+
+});
