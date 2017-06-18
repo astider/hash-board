@@ -51,10 +51,10 @@ const botmaster = new Botmaster(botmasterSettings);
 const messengerBot = new Botmaster.botTypes.MessengerBot(messengerSettings);
 botmaster.addBot(messengerBot)
 
-
+console.log('it works ?')
 // -------------------------------------------------------------------------
 
-
+/*
 
 
 botmaster.on('update', (bot, update) => {
@@ -181,6 +181,8 @@ function rounder(floatNumber, point) {
 
 
 let nodeSchedule = require('node-schedule');
-let rerunner = nodeSchedule.scheduleJob('*/10 * * * *', function(){
-  console.log('running');
-});
+//let rerunner = nodeSchedule.scheduleJob('10 * * * *', function(){
+//  console.log('running');
+//});
+
+*/
