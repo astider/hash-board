@@ -55,7 +55,9 @@ module.exports = function(app, express) {
 
 
 
-  app.get("/", function(req, res) { res.send('yay') })
+  app.get("/", function(req, res) {
+    res.json({ 'text': 'yay' })
+  })
 
   app.get("/*", (req, res) => { res.render("404") } )
 
