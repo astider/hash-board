@@ -170,7 +170,17 @@ botmaster.on('update', (bot, update) => {
   }
   else if(update.postback){
 
-    console.log(`postback found : ${JSON.stringify(update.postback)}`);
+    let command = update.postback.payload
+
+    if(command === "FIND_MONSTER") {
+      bot.sendTextCascadeTo([`Wild SLIME Appears!`, `What will you do?`, `You punch SLIME's legs!`, `wait... does it have leg?`, `doesn't matter, SLIME fainted!`, `You gained 0.0001 EXP!`], update.sender.id)
+    }
+    else if(command === "VIEW_STATUS") {
+      bot.sendTextCascadeTo([`Lv. 10`, `Exp: 14523/20000`], update.sender.id)
+    }
+    else if(command === "UPDATE_STATUS") {
+      bot.sendTextCascadeTo([`STR 10, DEX 1, VIT 5, INT 0`, `You don't have status point to be used.`], update.sender.id)
+    }
 
   }
 
