@@ -220,7 +220,20 @@ botmaster.on('update', (bot, update) => {
 
     }
     else if(command === "FIND_MONSTER") {
-      bot.sendTextCascadeTo([`Wild SLIME Appears!`, `What will you do?`, `You punch SLIME's legs!`, `wait... does it have leg?`, `doesn't matter, SLIME fainted!`, `You gained 0.0001 EXP!`], update.sender.id)
+
+      db.ref(`users/${update.sender.id}/CHARACTER/EXP`).once('value')
+      .then(expSnapshot => {
+
+        let oldExp = expSnapshot.val()
+        db.ref(`users/${update.sender.id}/CHARACTER/EXP`).set(oldExp+5)
+        bot.sendTextCascadeTo([`Wild SLIME Appears!`, `What will you do?`, `You punch SLIME's legs!`, `wait... does it have leg?`, `doesn't matter, SLIME fainted!`, `You gained 5 EXP!`], update.sender.id)
+
+      })
+      .catch(error => {
+        console.log(`find mon error: ${error}`)
+        bot.sendTextMessageTo('Something went WRONG, please try again later.', update.sender.id)
+      })
+
     }
     else if(command === "VIEW_STATUS") {
       //bot.sendTextCascadeTo([`Lv. 10`, `Exp: 14523/20000`], update.sender.id)
