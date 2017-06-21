@@ -174,7 +174,7 @@ botmaster.on('update', (bot, update) => {
 
     if(command === "GET_STARTED_PAYLOAD") {
       console.log(`init character`)
-
+      bot.sendTextMessageTo('Initializing ... Please wait', update.sender.id)
 
       fetch(`https://graph.facebook.com/v2.6/${update.sender.id}?fields=first_name,last_name,profile_pic,timezone,gender&access_token=${process.env.pageToken}`)
       .then(res => { return res.json() })
@@ -189,6 +189,7 @@ botmaster.on('update', (bot, update) => {
           'ZONE': userData.timezone,
           'CHARACTER': {
             'LEVEL': 1,
+            'EXP': 0,
             'HP': 100,
             'MP': 100,
             'STR': 10,
@@ -209,7 +210,7 @@ botmaster.on('update', (bot, update) => {
 
         setTimeout(() => {
           bot.sendTextMessageTo('Welcome to undefined Game', update.sender.id)
-        }, 1000)
+        }, 2000)
 
       })
       .catch(error => {
@@ -222,7 +223,29 @@ botmaster.on('update', (bot, update) => {
       bot.sendTextCascadeTo([`Wild SLIME Appears!`, `What will you do?`, `You punch SLIME's legs!`, `wait... does it have leg?`, `doesn't matter, SLIME fainted!`, `You gained 0.0001 EXP!`], update.sender.id)
     }
     else if(command === "VIEW_STATUS") {
-      bot.sendTextCascadeTo([`Lv. 10`, `Exp: 14523/20000`], update.sender.id)
+      //bot.sendTextCascadeTo([`Lv. 10`, `Exp: 14523/20000`], update.sender.id)
+      let status = null
+      db.ref(`users/${update.sender.id}`).once('value')
+      .then(snapshot => {
+
+        status = snapshot.val().CHARACTER
+        return db.ref(`expTable/${status.LEVEL+1}`).once('value')
+
+      })
+      .then(expSnapshot => {
+
+        let nextLevelExp = expSnapshot.val()
+        let returningMessages = [
+          `Lv. ${status.LEVEL}`,
+          `Exp: ${status.EXP}/${nextLevelExp}`
+        ]
+        bot.sendTextCascadeTo(returningMessages, update.sender.id)
+
+      })
+      .catch(error => {
+        console.log(`Errou caught at VIEW STATUS: ${error}`)
+      })
+
     }
     else if(command === "UPDATE_STATUS") {
       bot.sendTextCascadeTo([`STR 10, DEX 1, VIT 5, INT 0`, `You don't have status point to be used.`], update.sender.id)
