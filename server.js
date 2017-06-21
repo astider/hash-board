@@ -172,7 +172,53 @@ botmaster.on('update', (bot, update) => {
 
     let command = update.postback.payload
 
-    if(command === "FIND_MONSTER") {
+    if(command === "GET_STARTED_PAYLOAD") {
+      console.log(`init character`)
+
+
+      fetch(`https://graph.facebook.com/v2.6/${update.sender.id}?fields=first_name,last_name,profile_pic,timezone,gender&access_token=${process.env.pageToken}`)
+      .then(res => { return res.json() })
+      .then(userData => {
+
+        let userInfo = {
+          'ID': update.sender.id,
+          'NAME': userData.first_name,
+          'LASTNAME': userData.last_name,
+          'AVATAR': userData.profile_pic,
+          'GENDER': userData.gender,
+          'ZONE': userData.timezone,
+          'CHARACTER': {
+            'LEVEL': 1,
+            'HP': 100,
+            'MP': 100,
+            'STR': 10,
+            'DEX': 10,
+            'VIT': 10,
+            'INT': 10,
+          },
+          'MONEY': 10,
+          'ITEMS': [
+            {
+              'ITEM_ID': 1,
+              'NAME': 'POTION'
+            }
+          ]
+        }
+
+        db.ref(`users/${update.sender.id}`).set(userInfo)
+
+        setTimeout(() => {
+          bot.sendTextMessageTo('Welcome to undefined Game', update.sender.id)
+        }, 1000)
+
+      })
+      .catch(error => {
+        console.log(`error found at init : ${error}`)
+        bot.sendTextMessageTo('Something went WRONG, please try again later.', update.sender.id)
+      })
+
+    }
+    else if(command === "FIND_MONSTER") {
       bot.sendTextCascadeTo([`Wild SLIME Appears!`, `What will you do?`, `You punch SLIME's legs!`, `wait... does it have leg?`, `doesn't matter, SLIME fainted!`, `You gained 0.0001 EXP!`], update.sender.id)
     }
     else if(command === "VIEW_STATUS") {
