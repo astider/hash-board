@@ -170,6 +170,7 @@ botmaster.on('update', (bot, update) => {
   }
   else if(update.postback){
 
+    console.log(`postback found : ${JSON.stringify(update.postback)}`);
 
   }
 
