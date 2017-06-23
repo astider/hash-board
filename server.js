@@ -71,7 +71,7 @@ db.ref(`users`).once('value')
   gameSession.monsters = snapshot.val()
   return db.ref(`expTable`).once('value')
 })
-.the(snapshot => {
+.then(snapshot => {
   expStair = snapshot.val()
 })
 .catch(error => {
