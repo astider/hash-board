@@ -54,7 +54,53 @@ botmaster.addBot(messengerBot)
 console.log('it works ?')
 // -------------------------------------------------------------------------
 
+gameSession = {}
+/*
+  {
 
+    players : {
+
+      id: {
+        hp: ,
+        mp: ,
+        exp: ,
+        str: ,
+        dex: ,
+        vit: ,
+        money: 10,
+        item: [
+          {
+            item_id: 1,
+            name: 'POTION'
+          }
+        ]
+
+      }
+
+    },
+    monsters: {
+      [
+        0: {
+          name: ,
+          hp: ,
+          mp: ,
+          exp: ,
+          str: ,
+          dex: ,
+          vit: ,
+          int: ,
+          loots: [{
+            item_id: 1,
+            name: 'POTION'
+          }]
+        }
+      ]
+    }
+
+
+  }
+
+*/
 
 
 botmaster.on('update', (bot, update) => {
@@ -173,6 +219,7 @@ botmaster.on('update', (bot, update) => {
     let command = update.postback.payload
 
     if(command === "GET_STARTED_PAYLOAD") {
+
       console.log(`init character`)
       bot.sendTextMessageTo('Initializing ... Please wait', update.sender.id)
 
@@ -219,15 +266,19 @@ botmaster.on('update', (bot, update) => {
       })
 
     }
+
     else if(command === "FIND_MONSTER") {
 
-      db.ref(`users/${update.sender.id}/CHARACTER/EXP`).once('value')
-      .then(expSnapshot => {
-
-        let oldExp = expSnapshot.val()
+      let characterStat = null
+      db.ref(`users/${update.sender.id}/CHARACTER`).once('value')
+      .then(characterSnapshot => {
+        characterStat = characterSnapshot.val()
+        return db.ref(`monsters/0`).once('value')
+      })
+      .then(monsterSnapshot => {
+        console.log(JSON.stringify(monsterSnapshot.val()))
         db.ref(`users/${update.sender.id}/CHARACTER/EXP`).set(oldExp+5)
         bot.sendTextCascadeTo([`Wild SLIME Appears!`, `What will you do?`, `You punch SLIME's legs!`, `wait... does it have leg?`, `doesn't matter, SLIME fainted!`, `You gained 5 EXP!`], update.sender.id)
-
       })
       .catch(error => {
         console.log(`find mon error: ${error}`)
