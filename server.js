@@ -70,6 +70,13 @@ db.ref(`users`).once('value')
 .catch(error => {
   console.log(`init error: ${error}`)
 })
+
+db.ref(`users`).on('child_changed', (childSnapshot) => {
+  gameSession.players[childSnapshot.key] = childSnapshot.val()
+  console.log(`player [${childSnapshot.key}]'s status updated`)
+})
+
+
 /*
   {
 
