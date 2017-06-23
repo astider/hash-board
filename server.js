@@ -84,14 +84,14 @@ db.ref(`users`).on('child_changed', (childSnapshot) => {
 
   while(tempPlayerUpdate.CHARACTER.EXP - expStair[tempPlayerUpdate.CHARACTER.LEVEL] >= 0) {
     tempPlayerUpdate.CHARACTER.LEVEL = tempPlayerUpdate.CHARACTER.LEVEL+1
-    tempPlayerUpdate.CHARACTER.EXP = tempPlayerUpdate.CHARACTER.EXP - expStair[tempPlayerUpdate.CHARACTER.LEVEL
+    tempPlayerUpdate.CHARACTER.EXP = tempPlayerUpdate.CHARACTER.EXP - expStair[tempPlayerUpdate.CHARACTER.LEVEL]
   }
 
   gameSession.players[childSnapshot.key] = tempPlayerUpdate
   db.ref(`users/${childSnapshot.key}`).set(tempPlayerUpdate)
 
   console.log(`player [${childSnapshot.key}]'s status updated`)
-  
+
 })
 
 //-----------------------------------------------------
