@@ -54,30 +54,25 @@ botmaster.addBot(messengerBot)
 console.log('it works ?')
 // -------------------------------------------------------------------------
 
-gameSession = {}
+gameSession = {
+  'players': null,
+  'monsters': null
+}
+
+db.ref(`users`).once('value')
+.then(snapshot => {
+  gameSession.players = snapshot.val()
+  return db.ref(`monsters`).once('value')
+})
+.then(snapshot => {
+  gameSession.monsters = snapshot.val()
+})
+.catch(error => {
+  console.log(`init error: ${error}`)
+})
 /*
   {
 
-    players : {
-
-      id: {
-        hp: ,
-        mp: ,
-        exp: ,
-        str: ,
-        dex: ,
-        vit: ,
-        money: 10,
-        item: [
-          {
-            item_id: 1,
-            name: 'POTION'
-          }
-        ]
-
-      }
-
-    },
     monsters: {
       [
         0: {
@@ -269,21 +264,13 @@ botmaster.on('update', (bot, update) => {
 
     else if(command === "FIND_MONSTER") {
 
-      let characterStat = null
-      db.ref(`users/${update.sender.id}/CHARACTER`).once('value')
-      .then(characterSnapshot => {
-        characterStat = characterSnapshot.val()
-        return db.ref(`monsters/0`).once('value')
-      })
-      .then(monsterSnapshot => {
-        console.log(JSON.stringify(monsterSnapshot.val()))
-        db.ref(`users/${update.sender.id}/CHARACTER/EXP`).set(oldExp+5)
-        bot.sendTextCascadeTo([`Wild SLIME Appears!`, `What will you do?`, `You punch SLIME's legs!`, `wait... does it have leg?`, `doesn't matter, SLIME fainted!`, `You gained 5 EXP!`], update.sender.id)
-      })
-      .catch(error => {
-        console.log(`find mon error: ${error}`)
-        bot.sendTextMessageTo('Something went WRONG, please try again later.', update.sender.id)
-      })
+      let playerID = update.sender.id
+      let playerStatus = gameSession.players[playerID].CHARACTER
+
+      let monsters = gameSession.monsters[0]
+
+      db.ref(`users/${playerID}/CHARACTER/EXP`).set(playerStatus.EXP+monsters.EXP)
+      bot.sendTextCascadeTo([`Wild SLIME Appears!`, `What will you do?`, `You punch SLIME's legs!`, `wait... does it have leg?`, `doesn't matter, SLIME fainted!`, `You gained 5 EXP!`], update.sender.id)
 
     }
     else if(command === "VIEW_STATUS") {
