@@ -312,8 +312,8 @@ function rounder(floatNumber, point) {
 
 let nodeSchedule = require('node-schedule');
 let rerunner = nodeSchedule.scheduleJob('*/10 * * * *', function(){
-
-  fetch('http://yiimp.ccminer.org/api/wallet?address=bNg1BkKHy5m38hMKdy7ED7Bz99Dz8ZLeDw')
+/*
+  fetch('https://lbry.suprnova.cc/index.php?page=api&action=getuserstatus&api_key=61ef9d9818cc2932be1071c8a53a50a7853830ba62b8bd4486a76c27324fe029&id=999317')
   .then(res => { return res.json() })
   .then(jsonData => {
     let texts = [ 'unsold: ' + jsonData.unsold,
@@ -327,7 +327,7 @@ let rerunner = nodeSchedule.scheduleJob('*/10 * * * *', function(){
   .catch(error => {
     //
   })
-
+*/
 
   fetch('https://api.nicehash.com/api?method=stats.provider&addr=17vY5jqyieHEr8SotznGekCPEixWsM9Ryp')
   .then(res => { return res.json() })
