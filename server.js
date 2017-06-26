@@ -54,8 +54,47 @@ botmaster.addBot(messengerBot)
 console.log('it works ?')
 // -------------------------------------------------------------------------
 
+gameSession = {
+  'players': null,
+  'monsters': null
+}
 
+expStair = null
 
+// init game
+db.ref(`users`).once('value')
+.then(snapshot => {
+  gameSession.players = snapshot.val()
+  return db.ref(`monsters`).once('value')
+})
+.then(snapshot => {
+  gameSession.monsters = snapshot.val()
+  return db.ref(`expTable`).once('value')
+})
+.then(snapshot => {
+  expStair = snapshot.val()
+})
+.catch(error => {
+  console.log(`init error: ${error}`)
+})
+
+db.ref(`users`).on('child_changed', (childSnapshot) => {
+
+  let tempPlayerUpdate = childSnapshot.val()
+
+  while(tempPlayerUpdate.CHARACTER.EXP - expStair[tempPlayerUpdate.CHARACTER.LEVEL+1] >= 0) {
+    tempPlayerUpdate.CHARACTER.LEVEL = tempPlayerUpdate.CHARACTER.LEVEL+1
+    tempPlayerUpdate.CHARACTER.EXP = tempPlayerUpdate.CHARACTER.EXP - expStair[tempPlayerUpdate.CHARACTER.LEVEL+1]
+  }
+
+  gameSession.players[childSnapshot.key] = tempPlayerUpdate
+  db.ref(`users/${childSnapshot.key}`).set(tempPlayerUpdate)
+
+  console.log(`player [${childSnapshot.key}]'s status updated`)
+
+})
+
+//-----------------------------------------------------
 
 botmaster.on('update', (bot, update) => {
 
@@ -170,6 +209,96 @@ botmaster.on('update', (bot, update) => {
   }
   else if(update.postback){
 
+    let command = update.postback.payload
+
+    if(command === "GET_STARTED_PAYLOAD") {
+
+      console.log(`init character`)
+      bot.sendTextMessageTo('Initializing ... Please wait', update.sender.id)
+
+      fetch(`https://graph.facebook.com/v2.6/${update.sender.id}?fields=first_name,last_name,profile_pic,timezone,gender&access_token=${process.env.pageToken}`)
+      .then(res => { return res.json() })
+      .then(userData => {
+
+        let userInfo = {
+          'ID': update.sender.id,
+          'NAME': userData.first_name,
+          'LASTNAME': userData.last_name,
+          'AVATAR': userData.profile_pic,
+          'GENDER': userData.gender,
+          'ZONE': userData.timezone,
+          'CHARACTER': {
+            'LEVEL': 1,
+            'EXP': 0,
+            'HP': 100,
+            'MP': 100,
+            'STR': 10,
+            'DEX': 10,
+            'VIT': 10,
+            'INT': 10,
+          },
+          'MONEY': 10,
+          'ITEMS': [
+            {
+              'ITEM_ID': 1,
+              'NAME': 'POTION'
+            }
+          ]
+        }
+
+        db.ref(`users/${update.sender.id}`).set(userInfo)
+
+        setTimeout(() => {
+          bot.sendTextMessageTo('Welcome to undefined Game', update.sender.id)
+        }, 2000)
+
+      })
+      .catch(error => {
+        console.log(`error found at init : ${error}`)
+        bot.sendTextMessageTo('Something went WRONG, please try again later.', update.sender.id)
+      })
+
+    }
+
+    else if(command === "FIND_MONSTER") {
+
+      let playerID = update.sender.id
+      let playerStatus = gameSession.players[playerID].CHARACTER
+
+      let monsters = gameSession.monsters[0]
+
+      db.ref(`users/${playerID}/CHARACTER/EXP`).set(playerStatus.EXP+monsters.EXP)
+      bot.sendTextCascadeTo([`Wild SLIME Appears!`, `What will you do?`, `You punch SLIME's legs!`, `wait... does it have leg?`, `doesn't matter, SLIME fainted!`, `You gained 5 EXP!`], update.sender.id)
+
+    }
+    else if(command === "VIEW_STATUS") {
+      //bot.sendTextCascadeTo([`Lv. 10`, `Exp: 14523/20000`], update.sender.id)
+      let status = null
+      db.ref(`users/${update.sender.id}`).once('value')
+      .then(snapshot => {
+
+        status = snapshot.val().CHARACTER
+        return db.ref(`expTable/${status.LEVEL+1}`).once('value')
+
+      })
+      .then(expSnapshot => {
+
+        let nextLevelExp = expSnapshot.val()
+        let returningMessages = [
+          `Lv. ${status.LEVEL}`,
+          `Exp: ${status.EXP}/${nextLevelExp}`
+        ]
+        bot.sendTextCascadeTo(returningMessages, update.sender.id)
+
+      })
+      .catch(error => {
+        console.log(`Errou caught at VIEW STATUS: ${error}`)
+      })
+
+    }
+    else if(command === "UPDATE_STATUS") {
+      bot.sendTextCascadeTo([`STR 10, DEX 1, VIT 5, INT 0`, `You don't have status point to be used.`], update.sender.id)
+    }
 
   }
 
