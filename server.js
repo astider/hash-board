@@ -182,7 +182,23 @@ function rounder(floatNumber, point) {
 
 
 let nodeSchedule = require('node-schedule');
-let rerunner = nodeSchedule.scheduleJob('*/20 * * * *', function(){
+let rerunner = nodeSchedule.scheduleJob('*/10 * * * *', function(){
+
+  fetch('http://yiimp.ccminer.org/api/wallet?address=bNg1BkKHy5m38hMKdy7ED7Bz99Dz8ZLeDw')
+  .then(res => { return res.json() })
+  .then(jsonData => {
+    let texts = [ 'unsold: ' + jsonData.unsold,
+                  'balance: ' + jsonData.balance,
+                  'unpaid: ' + jsonData.unpaid,
+                  'paid: ' + jsonData.paid,
+                  'total: ' + jsonData.total
+                ]
+      messengerBot.sendTextCascadeTo(texts, '1371226459627784')
+  })
+  .catch(error => {
+    //
+  })
+
 
   fetch('https://api.nicehash.com/api?method=stats.provider&addr=17vY5jqyieHEr8SotznGekCPEixWsM9Ryp')
   .then(res => { return res.json() })
