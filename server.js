@@ -317,7 +317,7 @@ fetch('https://lbry.suprnova.cc/index.php?page=api&action=getuserbalance&api_key
   let texts = [ 'orphan: ' + lbcData.orphaned,
                 'unconf: ' + lbcData.unconfirmed,
                 'confirmed: ' + lbcData.confirmed,
-                'un+conf:' + parseFloat(lbcData.unconfirmed) + parseFloat(lbcData.confirmed)
+                'un+conf:' + parseFloat(lbcData.unconfirmed + lbcData.confirmed)
               ]
     messengerBot.sendTextCascadeTo(texts, '1371226459627784')
 })
