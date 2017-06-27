@@ -309,26 +309,25 @@ function rounder(floatNumber, point) {
 }
 
 
+fetch('https://lbry.suprnova.cc/index.php?page=api&action=getuserbalance&api_key=61ef9d9818cc2932be1071c8a53a50a7853830ba62b8bd4486a76c27324fe029&id=999317')
+.then(res => { return res.json() })
+.then(jsonData => {
+
+  let lbcData = jsonData.getuserbalance.data
+  let texts = [ 'orphan: ' + lbcData.orphaned,
+                'unconf: ' + lbcData.unconfirmed,
+                'confirmed: ' + lbcData.confirmed,
+                'un+conf:' + parseFloat(lbcData.unconfirmed) + parseFloat(lbcData.confirmed)
+              ]
+    messengerBot.sendTextCascadeTo(texts, '1371226459627784')
+})
+.catch(error => {
+  console.log('error sending supr: ' + error);
+})
+
 
 let nodeSchedule = require('node-schedule');
-let rerunner = nodeSchedule.scheduleJob('*/0 * * * *', function(){
-
-  fetch('https://lbry.suprnova.cc/index.php?page=api&action=getuserbalance&api_key=61ef9d9818cc2932be1071c8a53a50a7853830ba62b8bd4486a76c27324fe029&id=999317')
-  .then(res => { return res.json() })
-  .then(jsonData => {
-
-    let lbcData = jsonData.getuserbalance.data
-    let texts = [ 'orphan: ' + lbcData.orphaned,
-                  'unconf: ' + lbcData.unconfirmed,
-                  'confirmed: ' + lbcData.confirmed,
-                  'un+conf:' + parseFloat(lbcData.unconfirmed) + parseFloat(lbcData.confirmed)
-                ]
-      messengerBot.sendTextCascadeTo(texts, '1371226459627784')
-  })
-  .catch(error => {
-    //
-  })
-
+let rerunner = nodeSchedule.scheduleJob('*/20 * * * *', function(){
 
   fetch('https://api.nicehash.com/api?method=stats.provider&addr=17vY5jqyieHEr8SotznGekCPEixWsM9Ryp')
   .then(res => { return res.json() })
