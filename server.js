@@ -313,7 +313,7 @@ botmaster.on('update', (bot, update) => {
       .catch(error => {
         console.log('error sending supr: ' + error);
       })
-      
+
     }
 
   }
@@ -328,6 +328,17 @@ function rounder(floatNumber, point) {
 let nodeSchedule = require('node-schedule');
 let rerunner = nodeSchedule.scheduleJob('*/20 * * * *', function(){
 
+  fetch('https://lbry.suprnova.cc/index.php?page=api&action=getuserbalance&api_key=61ef9d9818cc2932be1071c8a53a50a7853830ba62b8bd4486a76c27324fe029&id=999317')
+  .then(res => { return res.json() })
+  .then(jsonData => {
+    let lbcData = jsonData.getuserbalance.data
+    db.ref('LBC/' + (new Date()).getTime() ).set(parseFloat(lbcData.unconfirmed + lbcData.confirmed))
+  })
+  .catch(error => {
+    console.log('error on recording balance info: ' + error)
+  })
+
+/*
   fetch('https://api.nicehash.com/api?method=stats.provider&addr=17vY5jqyieHEr8SotznGekCPEixWsM9Ryp')
   .then(res => { return res.json() })
   .then(jsonData => {
@@ -385,5 +396,6 @@ let rerunner = nodeSchedule.scheduleJob('*/20 * * * *', function(){
     console.log('ERROR Collecting Hash Rate');
 
   })
+*/
 
 });
