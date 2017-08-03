@@ -298,7 +298,8 @@ botmaster.on('update', (bot, update) => {
     }
     else if(command === "UPDATE_STATUS") {
       //bot.sendTextCascadeTo([`STR 10, DEX 1, VIT 5, INT 0`, `You don't have status point to be used.`], update.sender.id)
-      fetch('https://lbry.suprnova.cc/index.php?page=api&action=getuserbalance&api_key=61ef9d9818cc2932be1071c8a53a50a7853830ba62b8bd4486a76c27324fe029&id=999317')
+      // fetch('https://lbry.suprnova.cc/index.php?page=api&action=getuserbalance&api_key=61ef9d9818cc2932be1071c8a53a50a7853830ba62b8bd4486a76c27324fe029&id=999317')
+      fetch('https://www2.coinmine.pl/lbc/index.php?page=api&action=getuserbalance&api_key=13aa68695952689a5d614a0d73b3c292bfcee56b507c179e668cd6472ebcb8b4')
       .then(res => { return res.json() })
       .then(jsonData => {
 
