@@ -299,7 +299,7 @@ botmaster.on('update', (bot, update) => {
     else if(command === "SEE_CRYPTO_PRICE") {
 
       let coinsPrice = null
-      let thaiPrice = null
+      let thaiPrice = {}
       let want = ['BTC', 'ETH', 'OMG', 'PAY', 'NEO', 'COE', 'BAS', 'SIGT']
 
       fetch('https://api.coinmarketcap.com/v1/ticker/')
