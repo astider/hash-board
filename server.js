@@ -325,7 +325,7 @@ botmaster.on('update', (bot, update) => {
             
             texts.push(`${currency.symbol} [${currency.percent_change_1h}%]`)
             
-            if(thaiPrice[urrency.symbol])
+            if(thaiPrice[currency.symbol])
               texts.push(`${currency.price_btc} BTC | ฿${thaiPrice[currency.symbol]}`)
             else 
               texts.push(`${currency.price_btc} BTC | $${currency.price_usd}`)
