@@ -298,11 +298,23 @@ botmaster.on('update', (bot, update) => {
     }
     else if(command === "SEE_CRYPTO_PRICE") {
 
+      let coinsPrice = null
+      let thaiPrice = null
+      let want = ['BTC', 'ETH', 'OMG', 'PAY', 'NEO', 'COE', 'BAS', 'SIGT']
+
       fetch('https://api.coinmarketcap.com/v1/ticker/')
       .then(res => { return res.json() } )
       .then(jsonData => {
+        coinsPrice = jsonData
+        return fetch('https://bx.in.th/api/')
+      })
+      .then(res => { return res.json() } )
+      .then(bxJsonData => {
 
-        let want = ['BTC', 'ETH', 'OMG', 'PAY', 'NEO', 'COE', 'BAS', 'SIGT']
+        thaiPrice['BTC'] = bxJsonData[1].last_price
+        thaiPrice['OMG'] = bxJsonData[26].last_price
+        thaiPrice['ETH'] = bxJsonData[21].last_price
+
         let texts = []
 
         texts.push('___________________________')
@@ -312,7 +324,11 @@ botmaster.on('update', (bot, update) => {
           if (want.indexOf(currency.symbol) > -1) {
             
             texts.push(`${currency.symbol} [${currency.percent_change_1h}%]`)
-            texts.push(`${currency.price_btc} BTC | $${currency.price_usd}`)
+            
+            if(thaiPrice[urrency.symbol])
+              texts.push(`${currency.price_btc} BTC | ฿${thaiPrice[urrency.symbol]}`)
+            else 
+              texts.push(`${currency.price_btc} BTC | $${currency.price_usd}`)
 
           }
 
