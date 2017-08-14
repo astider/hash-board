@@ -1,0 +1,37 @@
+{
+  "persistent_menu": [
+    {
+      "locale": "default",
+      "composer_input_disabled": false,
+      "call_to_actions": [
+        {
+          "type": "nested",
+          "title": "My Character",
+          "call_to_actions": [
+            {
+              "type": "postback",
+              "title": "View Status",
+              "payload": "VIEW_STATUS"
+            },
+            {
+              "type": "postback",
+              "title": "Update Status",
+              "payload": "UPDATE_STATUS"
+            },
+            {
+              "type": "postback",
+              "title": "Market Price",
+              "payload": "SEE_CRYPTO_PRICE"
+            }
+          ]
+        },
+        {
+          "type": "postback",
+          "title": "Find Monster",
+          "payload": "FIND_MONSTER"
+        }
+      ]
+    },
+    { "locale": "th_TH", "composer_input_disabled": false }
+  ]
+}
