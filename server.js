@@ -319,7 +319,7 @@ botmaster.on('update', (bot, update) => {
 
         texts.push('___________________________')
 
-        jsonData.forEach(currency => {
+        coinsPrice.forEach(currency => {
 
           if (want.indexOf(currency.symbol) > -1) {
             
