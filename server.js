@@ -311,9 +311,8 @@ botmaster.on('update', (bot, update) => {
 
           if (want.indexOf(currency.symbol) > -1) {
             
-            texts.push(`${currency.symbol} = $${currency.price_usd}, ${currency.price_btc} BTC`)
-            texts.push(`change ${currency.percent_change_1h}%`)
-            texts.push('____')
+            texts.push(`${currency.symbol} [${currency.percent_change_1h}%]`)
+            texts.push(`${currency.price_btc} BTC | $${currency.price_usd}`)
 
           }
 
