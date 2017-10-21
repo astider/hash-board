@@ -54,48 +54,6 @@ botmaster.addBot(messengerBot)
 console.log('it works ?')
 // -------------------------------------------------------------------------
 
-gameSession = {
-  'players': null,
-  'monsters': null
-}
-
-expStair = null
-
-// init game
-db.ref(`users`).once('value')
-.then(snapshot => {
-  gameSession.players = snapshot.val()
-  return db.ref(`monsters`).once('value')
-})
-.then(snapshot => {
-  gameSession.monsters = snapshot.val()
-  return db.ref(`expTable`).once('value')
-})
-.then(snapshot => {
-  expStair = snapshot.val()
-})
-.catch(error => {
-  console.log(`init error: ${error}`)
-})
-
-db.ref(`users`).on('child_changed', (childSnapshot) => {
-
-  let tempPlayerUpdate = childSnapshot.val()
-
-  while(tempPlayerUpdate.CHARACTER.EXP - expStair[tempPlayerUpdate.CHARACTER.LEVEL+1] >= 0) {
-    tempPlayerUpdate.CHARACTER.EXP = tempPlayerUpdate.CHARACTER.EXP - expStair[tempPlayerUpdate.CHARACTER.LEVEL+1]
-    tempPlayerUpdate.CHARACTER.LEVEL = tempPlayerUpdate.CHARACTER.LEVEL+1
-  }
-
-  gameSession.players[childSnapshot.key] = tempPlayerUpdate
-  db.ref(`users/${childSnapshot.key}`).set(tempPlayerUpdate)
-
-  console.log(`player [${childSnapshot.key}]'s status updated`)
-
-})
-
-//-----------------------------------------------------
-
 botmaster.on('update', (bot, update) => {
 
   console.log('info : ' + JSON.stringify(update))
@@ -262,104 +220,15 @@ botmaster.on('update', (bot, update) => {
 
     else if(command === "FIND_MONSTER") {
 
-      let playerID = update.sender.id
-      let playerStatus = gameSession.players[playerID].CHARACTER
-
-      let monsters = gameSession.monsters[0]
-
-      db.ref(`users/${playerID}/CHARACTER/EXP`).set(playerStatus.EXP+monsters.EXP)
-      bot.sendTextCascadeTo([`Wild SLIME Appears!`, `What will you do?`, `You punch SLIME's legs!`, `wait... does it have leg?`, `doesn't matter, SLIME fainted!`, `You gained 5 EXP!`], update.sender.id)
-
     }
     else if(command === "VIEW_STATUS") {
-      //bot.sendTextCascadeTo([`Lv. 10`, `Exp: 14523/20000`], update.sender.id)
-      let status = null
-      db.ref(`users/${update.sender.id}`).once('value')
-      .then(snapshot => {
-
-        status = snapshot.val().CHARACTER
-        return db.ref(`expTable/${status.LEVEL+1}`).once('value')
-
-      })
-      .then(expSnapshot => {
-
-        let nextLevelExp = expSnapshot.val()
-        let returningMessages = [
-          `Lv. ${status.LEVEL}`,
-          `Exp: ${status.EXP}/${nextLevelExp}`
-        ]
-        bot.sendTextCascadeTo(returningMessages, update.sender.id)
-
-      })
-      .catch(error => {
-        console.log(`Errou caught at VIEW STATUS: ${error}`)
-      })
+      
 
     }
     else if(command === "SEE_CRYPTO_PRICE") {
 
-      let coinsPrice = null
-      let thaiPrice = {}
-      let want = ['BTC', 'ETH', 'OMG', 'PAY', 'NEO', 'COE', 'BAS', 'SIGT']
-
-      fetch('https://api.coinmarketcap.com/v1/ticker/')
-      .then(res => { return res.json() } )
-      .then(jsonData => {
-        coinsPrice = jsonData
-        return fetch('https://bx.in.th/api/')
-      })
-      .then(res => { return res.json() } )
-      .then(bxJsonData => {
-
-        thaiPrice['BTC'] = bxJsonData[1].last_price
-        thaiPrice['OMG'] = bxJsonData[26].last_price
-        thaiPrice['ETH'] = bxJsonData[21].last_price
-
-        let texts = []
-
-        texts.push('___________________________')
-
-        coinsPrice.forEach(currency => {
-
-          if (want.indexOf(currency.symbol) > -1) {
-            
-            texts.push(`${currency.symbol} [${currency.percent_change_1h}%]`)
-            
-            if(thaiPrice[currency.symbol])
-              texts.push(`${currency.price_btc} BTC | ฿${thaiPrice[currency.symbol]}`)
-            else 
-              texts.push(`${currency.price_btc} BTC | $${currency.price_usd}`)
-
-          }
-
-        })
-
-        bot.sendTextCascadeTo(texts, update.sender.id)
-
-      })
-      .catch(error => {
-        console.log('error sending price: ' + error);
-      })
-
     }
     else if(command === "UPDATE_STATUS") {
-      //bot.sendTextCascadeTo([`STR 10, DEX 1, VIT 5, INT 0`, `You don't have status point to be used.`], update.sender.id)
-      // fetch('https://lbry.suprnova.cc/index.php?page=api&action=getuserbalance&api_key=61ef9d9818cc2932be1071c8a53a50a7853830ba62b8bd4486a76c27324fe029&id=999317')
-      fetch('https://www2.coinmine.pl/lbc/index.php?page=api&action=getuserbalance&api_key=13aa68695952689a5d614a0d73b3c292bfcee56b507c179e668cd6472ebcb8b4')
-      .then(res => { return res.json() })
-      .then(jsonData => {
-
-        let lbcData = jsonData.getuserbalance.data
-        let texts = [ 'orphan: ' + lbcData.orphaned,
-                      'unconf: ' + lbcData.unconfirmed,
-                      'confirmed: ' + lbcData.confirmed,
-                      'un+conf:' + parseFloat(lbcData.unconfirmed + lbcData.confirmed)
-                    ]
-          messengerBot.sendTextCascadeTo(texts, '1371226459627784')
-      })
-      .catch(error => {
-        console.log('error sending supr: ' + error);
-      })
 
     }
 
@@ -375,74 +244,5 @@ function rounder(floatNumber, point) {
 let nodeSchedule = require('node-schedule');
 let rerunner = nodeSchedule.scheduleJob('*/20 * * * *', function(){
 
-  // fetch('https://lbry.suprnova.cc/index.php?page=api&action=getuserbalance&api_key=61ef9d9818cc2932be1071c8a53a50a7853830ba62b8bd4486a76c27324fe029&id=999317')
-  // .then(res => { return res.json() })
-  // .then(jsonData => {
-  //   let lbcData = jsonData.getuserbalance.data
-  //   db.ref('LBC/' + (new Date()).getTime() ).set(parseFloat(lbcData.unconfirmed + lbcData.confirmed))
-  // })
-  // .catch(error => {
-  //   console.log('error on recording balance info: ' + error)
-  // })
-
-/*
-  fetch('https://api.nicehash.com/api?method=stats.provider&addr=17vY5jqyieHEr8SotznGekCPEixWsM9Ryp')
-  .then(res => { return res.json() })
-  .then(jsonData => {
-
-    let result = jsonData.result.stats
-    let algoArray = [
-      'Scrypt',
-      'SHA256',
-      'ScryptNf',
-      'X11',
-      'X13',
-      'Keccak',
-      'X15',
-      'Nist5',
-      'NeoScrypt',
-      'Lyra2RE',
-      'WhirlpoolX',
-      'Qubit',
-      'Quark',
-      'Axiom',
-      'Lyra2REv2',
-      'ScryptJaneNf16',
-      'Blake256r8',
-      'Blake256r14',
-      'Blake256r8vnl',
-      'Hodl',
-      'DaggerHashimoto',
-      'Decred',
-      'CryptoNight',
-      'Lbry',
-      'Equihash',
-      'Pascal',
-      'X11Gost',
-      'Sia'
-    ]
-
-    let collection = {}
-    let totalBalance = 0.0
-
-    result.forEach(each => {
-      collection[algoArray[each.algo]] = {
-        'balance': each.balance,
-        'speed': each.accepted_speed
-      }
-      totalBalance += parseFloat(each.balance)
-    })
-
-    collection['balance'] = totalBalance
-
-    db.ref('stats/' + (new Date).getTime() ).set(collection)
-
-  })
-  .catch(error => {
-
-    console.log('ERROR Collecting Hash Rate');
-
-  })
-*/
 
 });
