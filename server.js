@@ -12,11 +12,6 @@ let app = express()
 
 require('./app/config/express.js')(app, express)
 
-// let messengerProfileAPI = require('./app/apis/messenger_profile.api.js')
-// let userMgt = require('./app/controllers/userManagement.controller.js')
-// let firebase = require('./app/config/firebase.init.js')
-// let database = firebase.database()
-//let firebase = require('firebase')
 let firebaseConfig = {
   apiKey: process.env.firebaseAPIKey,
   databaseURL: "https://hashbot-c4d51.firebaseio.com/"
